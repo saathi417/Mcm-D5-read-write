@@ -13,6 +13,7 @@ dependencies = []
 
 [project.optional-dependencies]
 can = ["python-can>=4.0"]
+dbc = ["cantools>=38.0"]
 dev = ["pytest>=7.0"]
 
 [tool.setuptools.packages.find]

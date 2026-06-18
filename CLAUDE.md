@@ -20,8 +20,9 @@ repo — do not add them.
 - **Language / runtime:** Python (`>=3.9`)
 - **Build backend:** setuptools (`pyproject.toml`)
 - **Tests:** pytest
-- **Runtime dependencies:** none. `python-can` is an optional extra (`[can]`)
-  used only for live capture; all decoding works without it.
+- **Runtime dependencies:** none. Optional extras: `[can]` (python-can, live
+  capture) and `[dbc]` (cantools, DBC decoding). All built-in J1939/OBD/UDS
+  decoding works without either.
 - **License:** Apache-2.0
 
 ## Layout
@@ -34,6 +35,8 @@ src/mcm_d5/
   signals.py            # Signal + PGN/SPN table + decode_pgn()
   dm1.py                # DM1/DM2 DTC parsing (parse_diagnostic)
   uds.py                # read-only UDS: 0x22 / 0x19 / 0x3E + UdsReadClient
+  obd.py                # read-only OBD-II/J1979: Mode 0x01 PIDs + 0x03 DTCs
+  dbc.py                # optional cantools-based DBC decoding (DbcDecoder)
   link.py               # Link protocol (recv only); ReplayLink + PythonCanLink
   monitor.py            # J1939Monitor — pump frames, decode, dispatch callbacks
   errors.py             # McmD5Error, DecodeError, LinkError
@@ -61,6 +64,11 @@ Uses the **`src/` layout** — the importable package lives in `src/mcm_d5`.
   exposes exactly those read methods — that guard is intentional; if you add a
   public method you must keep it read-only or the test (and the project intent)
   fails.
+- **OBD-II is read-only.** `obd.py` implements J1979 Mode 0x01 (current data)
+  and Mode 0x03 (stored DTCs) only — not Mode 0x04 (clear). `test_obd.py` has
+  the same exact-methods guard on `ObdReadClient`.
+- **DBC decoding is optional and decode-only.** `dbc.py` lazily imports
+  `cantools`; `test_dbc.py` is skipped when it isn't installed.
 
 ## Commands
 
