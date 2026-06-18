@@ -4,14 +4,15 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mcm-d5"
-version = "0.1.0"
-description = "Read/write client for the MCM D5 API service"
+version = "0.2.0"
+description = "Read-only J1939 / UDS diagnostics for the MCM D5 platform"
 readme = "README.md"
 requires-python = ">=3.9"
 license = { text = "Apache-2.0" }
 dependencies = []
 
 [project.optional-dependencies]
+can = ["python-can>=4.0"]
 dev = ["pytest>=7.0"]
 
 [tool.setuptools.packages.find]
