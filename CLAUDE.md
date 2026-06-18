@@ -2,85 +2,94 @@
 
 Guidance for AI assistants (Claude Code and others) working in this repository.
 
-## Repository status
+## Project overview
 
-This repository is in a **pre-code / bootstrap state**. As of this writing it
-contains only:
+A small **Python client** for **reading from and writing to the MCM D5 API
+service**. The public surface is two operations — `read(key)` and
+`write(key, value)` — exposed by `McmD5Client`.
 
-- `README.md` — a placeholder (`# Mcm-D5-read-write` / `Flash`)
-- `LICENSE` — Apache License 2.0
-- `CLAUDE.md` — this file
+**Current status: skeleton.** The package layout, the `read`/`write` interface,
+a pluggable transport, and tests are in place and passing. The actual wire
+contract (service paths, auth, request/response shape) is a **placeholder** and
+should be finalized once the real MCM D5 service spec is known. Inspect the code
+before relying on details; this file may lag behind the repo.
 
-There is **no source code, build system, dependency manifest, test suite, or
-CI configuration yet**. Do not assume any language, framework, or tooling is in
-place — none has been chosen. Verify the current state with `ls` and `git
-status` before acting on assumptions; this file may lag behind the repo.
+- **Language / runtime:** Python (`>=3.9`)
+- **Build backend:** setuptools (`pyproject.toml`)
+- **Tests:** pytest
+- **Runtime dependencies:** none (transport uses the stdlib `urllib`)
+- **License:** Apache-2.0
 
-### Keep this file current
+## Layout
 
-Because the project is just starting, this document will go stale quickly. When
-you add real structure (a language, package manager, build/test commands, a
-source layout), **update this file in the same change** so it reflects reality.
-Treat sections below marked _(to be defined)_ as TODOs to fill in as the
-codebase grows.
+```
+pyproject.toml          # packaging, deps, pytest config
+src/mcm_d5/
+  __init__.py           # public exports (McmD5Client, errors, transport types)
+  client.py             # McmD5Client: read()/write() — the main interface
+  transport.py          # Transport protocol + HttpTransport + Response
+  errors.py             # McmD5Error, TransportError, NotFoundError
+tests/
+  test_client.py        # client tests using an in-memory FakeTransport
+README.md
+LICENSE
+```
 
-## Project intent
+Uses the **`src/` layout** — the importable package lives in `src/mcm_d5`, not
+at the repo root.
 
-The repository name is `Mcm-D5-read-write`, suggesting a read/write component
-("D5"). The actual scope, language, and architecture have not been established
-in code. If the task you are working on clarifies the intent, capture it here.
+## Architecture notes
 
-- **Purpose:** _(to be defined)_
-- **Language / runtime:** _(to be defined)_
-- **Key dependencies:** _(to be defined)_
+- **Transport is pluggable.** `McmD5Client` talks to the service through a
+  `Transport` (a `typing.Protocol` with `get`/`put`). `HttpTransport` is the
+  default `urllib`-based implementation; tests inject a fake. When wiring real
+  behavior, prefer extending/replacing the transport over hard-coding HTTP in
+  the client.
+- **Placeholder wire format.** `client.py` maps a key to the path `d5/<key>`
+  and uses a JSON `{"value": ...}` envelope. These are guesses — update
+  `_path`, `read`, and `write` together when the spec lands, and adjust the
+  tests to match.
+- **Errors:** raise `NotFoundError` for missing keys (HTTP 404),
+  `TransportError` for transport/other failures. Both derive from `McmD5Error`.
+
+## Commands
+
+```bash
+pip install -e ".[dev]"   # install package + dev deps (pytest)
+pytest                    # run the test suite (config in pyproject.toml)
+```
+
+There is no linter/formatter or CI configured yet. If you add one, document the
+command here.
 
 ## Development workflow
 
 ### Branching
 
-- The default branch is `main`.
-- Do all work on a feature branch; do not commit directly to `main`.
-- Branch names in this project use the form `claude/<short-description>-<id>`
-  (e.g. `claude/claude-md-documentation-08lrtx`).
+- Default branch is `main`; do all work on a feature branch (don't commit to
+  `main` directly).
+- Branch names use the form `claude/<short-description>-<id>`.
 
-### Commits
+### Commits & pushing
 
-- Write clear, imperative, descriptive commit messages
-  (e.g. "Add read/write module skeleton").
-- Keep commits focused and scoped to a single logical change.
-
-### Pushing
-
-- Push with `git push -u origin <branch-name>`.
-- On network failures, retry with exponential backoff (2s, 4s, 8s, 16s).
+- Clear, imperative, focused commit messages (e.g. "Add MCM D5 read/write
+  client skeleton").
+- Push with `git push -u origin <branch-name>`; retry on network failure with
+  exponential backoff (2s, 4s, 8s, 16s).
 - **Do not open a pull request unless explicitly asked.**
-
-## Build / test / lint commands
-
-None exist yet. _(to be defined)_
-
-Once tooling is added, document the canonical commands here, for example:
-
-```
-# install dependencies
-# build
-# run tests
-# lint / format
-```
-
-Until then, do not invent or run build/test commands that the repository does
-not define.
 
 ## Conventions for AI assistants
 
-- **Don't fabricate structure.** This repo is nearly empty; only describe and
-  rely on what actually exists. Inspect the tree before making claims.
-- **Match what you find.** When code is added, mirror its existing style,
-  naming, and layout rather than imposing a new convention.
-- **Smallest viable change.** Prefer minimal, well-scoped edits over broad
-  scaffolding unless the task explicitly calls for it.
-- **License headers.** The project is Apache-2.0. Follow whatever header
-  convention is established once source files appear; don't add headers
-  preemptively without a pattern to follow.
-- **Update this file** whenever you introduce something future contributors (or
-  future AI sessions) would need to know to work effectively here.
+- **Match the existing style.** Type hints, module-level docstrings, and the
+  `src/` layout are already established — follow them.
+- **Add tests with code.** New behavior in `client.py`/`transport.py` should
+  come with a test in `tests/`, using `FakeTransport` rather than real network
+  calls. Keep `pytest` green.
+- **Keep dependencies minimal.** The package currently has zero runtime deps.
+  Don't add one (e.g. `requests`/`httpx`) without a reason; if you do, record
+  it in `pyproject.toml` and here.
+- **Don't fabricate the service contract.** Where paths/payloads are
+  placeholders, treat them as such — confirm against the real spec before
+  presenting them as settled.
+- **Update this file** whenever you change structure, commands, or conventions
+  so future sessions stay accurate.
