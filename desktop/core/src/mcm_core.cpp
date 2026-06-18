@@ -130,6 +130,19 @@ int32_t mcm_decode_pgn(int32_t pgn, const uint8_t* data, int32_t len,
     return written;
 }
 
+uint32_t mcm_build_request_pgn(int32_t requested_pgn, uint8_t dest, uint8_t src,
+                               uint8_t priority, uint8_t* out_data) {
+    if (out_data != nullptr) {
+        out_data[0] = static_cast<uint8_t>(requested_pgn & 0xFF);
+        out_data[1] = static_cast<uint8_t>((requested_pgn >> 8) & 0xFF);
+        out_data[2] = static_cast<uint8_t>((requested_pgn >> 16) & 0xFF);
+    }
+    // Request PGN is 59904 (0xEA00), a PDU1 destination-specific message:
+    // PF = 0xEA, PS = destination address.
+    const uint32_t prio = static_cast<uint32_t>(priority & 0x07);
+    return (prio << 26) | (0xEAu << 16) | (static_cast<uint32_t>(dest) << 8) | src;
+}
+
 int32_t mcm_parse_dm1(const uint8_t* data, int32_t len, McmLamps* lamps,
                       McmDtc* out, int32_t max) {
     if (data == nullptr || lamps == nullptr || out == nullptr || len < 2) {

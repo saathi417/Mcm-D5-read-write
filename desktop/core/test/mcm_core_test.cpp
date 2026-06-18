@@ -40,6 +40,12 @@ int main() {
     check(lamps.mil == 1, "dm1 mil");
     check(dtcs[0].spn == 100 && dtcs[0].fmi == 1 && dtcs[0].occurrence_count == 5, "dm1 dtc");
 
+    // Request PGN for DM1 (65226=0xFECA), global (0xFF), src 0xF9, prio 6.
+    uint8_t req[3];
+    uint32_t req_id = mcm_build_request_pgn(65226, 0xFF, 0xF9, 6, req);
+    check(req_id == 0x18EAFFF9u, "request pgn can id");
+    check(req[0] == 0xCA && req[1] == 0xFE && req[2] == 0x00, "request pgn data");
+
     if (failures == 0) {
         std::printf("all core tests passed\n");
     }
