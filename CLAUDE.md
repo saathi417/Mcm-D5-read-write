@@ -46,9 +46,13 @@ src/mcm_d5/
 examples/
   live_monitor.py       # connect to an adapter and print live data + DTCs
 tests/                  # frame/signals/dm1/monitor/uds/obd/dbc/tp/logreader/...
-desktop/                # separate read-only WPF + C++ desktop viewer
+desktop/                # separate read-only WPF + C++ desktop projects
   core/                 # C++ native decode lib (mcmcore), C ABI, self-test
-  app/                  # C# WPF front-end (P/Invokes mcmcore)
+  app/                  # C# WPF viewer (McmD5Viewer, P/Invokes mcmcore)
+  plugins/detroit/      # read-only OEM IEcuPlugin example
+  TruckDiagSuite/       # layered read-only suite: NativeEngine (C++) +
+                        # TruckDiag.Core/.Database/.UI (C#); 6 read tabs,
+                        # no Programming/clear/unlock/flash
 .github/workflows/ci.yml  # pytest + ruff + mypy on push/PR
 README.md  LICENSE
 ```
