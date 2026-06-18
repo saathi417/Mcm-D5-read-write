@@ -57,6 +57,18 @@ MCM_API int32_t mcm_decode_pgn(int32_t pgn, const uint8_t* data, int32_t len,
 MCM_API int32_t mcm_parse_dm1(const uint8_t* data, int32_t len,
                               McmLamps* lamps, McmDtc* out, int32_t max);
 
+/* Build a J1939 "Request PGN" (PGN 59904) frame that solicits a broadcast of
+ * `requested_pgn` from `dest` (0xFF = global request). Fills out_data[0..2]
+ * and returns the 29-bit CAN id to transmit.
+ *
+ * This is read-only by nature: a Request PGN only asks a node to *send* its
+ * data (VIN, component ID, DM1/DM2, etc.). It carries no payload and cannot
+ * write, unlock, or program. This is the only "transmit helper" the core
+ * provides — there is intentionally no arbitrary-send or write/program path. */
+MCM_API uint32_t mcm_build_request_pgn(int32_t requested_pgn, uint8_t dest,
+                                       uint8_t src, uint8_t priority,
+                                       uint8_t* out_data /* >= 3 bytes */);
+
 #ifdef __cplusplus
 }
 #endif

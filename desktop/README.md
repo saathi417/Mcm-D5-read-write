@@ -20,6 +20,26 @@ desktop/
 This mirrors the Python library in `../src/mcm_d5`; keep the SPN tables in
 `core/src/mcm_core.cpp` and `signals.py` in sync.
 
+```
+desktop/
+  core/include/iecu_plugin.h   read-only OEM plugin contract
+  plugins/detroit/             DetroitPlugin (read-only identify + decode)
+```
+
+## Scope (read-only)
+
+The native core exposes decode helpers plus exactly one transmit helper —
+`mcm_build_request_pgn`, which builds a J1939 *Request PGN* frame (it solicits
+a broadcast; it carries no payload and cannot write). The supported feature set
+is: connect/receive, vehicle discovery, read VIN / ECU IDs, read DTCs (DM1/DM2),
+live data, and log saving.
+
+Out of scope by design — not implemented here: **Clear DTCs** (UDS 0x14 / DM11),
+SecurityAccess unlock (0x27), RequestDownload/Upload/TransferData (0x34–0x37),
+WriteMemoryByAddress/WriteDataByIdentifier, any flash program/erase, and any
+"Programming" UI. The `IEcuPlugin` contract has no programming entry point;
+keep it that way.
+
 ## Build
 
 **Native core** (produces `mcmcore.dll`):
