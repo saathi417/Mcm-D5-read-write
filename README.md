@@ -9,8 +9,9 @@ derate, or write/flash any module.
 ## Install
 
 ```bash
-pip install -e ".[dev]"          # library + tests
-pip install -e ".[dev,can]"      # also install python-can for live capture
+pip install -e ".[dev]"              # library + tests
+pip install -e ".[dev,can]"          # + python-can for live capture
+pip install -e ".[dev,can,dbc]"      # + cantools for DBC decoding
 ```
 
 ## Live monitor (connect for read)
@@ -42,6 +43,17 @@ from mcm_d5 import J1939Frame, J1939Monitor, ReplayLink
 frames = [J1939Frame.from_can_id(0x0CF00400, b"...")]
 J1939Monitor(ReplayLink(frames)).pump()
 ```
+
+### Light-duty OBD-II (J1979)
+
+`ObdReadClient` reads Mode 0x01 current-data PIDs (RPM, coolant temp, speed,
+load, throttle, fuel level, …) and Mode 0x03 stored DTCs (decoded to codes
+like `P0301`) over an ELM327-style transceiver. Read-only — no Mode 0x04 clear.
+
+### DBC decoding (SavvyCAN / opendbc)
+
+`DbcDecoder.from_file("engine.dbc")` decodes frames against any DBC database
+via `cantools`, as an alternative/complement to the built-in J1939 table.
 
 ### UDS read services
 
