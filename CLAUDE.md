@@ -46,6 +46,9 @@ src/mcm_d5/
 examples/
   live_monitor.py       # connect to an adapter and print live data + DTCs
 tests/                  # frame/signals/dm1/monitor/uds/obd/dbc/tp/logreader/...
+desktop/                # separate read-only WPF + C++ desktop viewer
+  core/                 # C++ native decode lib (mcmcore), C ABI, self-test
+  app/                  # C# WPF front-end (P/Invokes mcmcore)
 .github/workflows/ci.yml  # pytest + ruff + mypy on push/PR
 README.md  LICENSE
 ```
@@ -72,6 +75,11 @@ Uses the **`src/` layout** — the importable package lives in `src/mcm_d5`.
   the same exact-methods guard on `ObdReadClient`.
 - **DBC decoding is optional and decode-only.** `dbc.py` lazily imports
   `cantools`; `test_dbc.py` is skipped when it isn't installed.
+- **Desktop viewer (`desktop/`) is read-only too.** The C++ core
+  (`mcmcore`) exports only decode functions (no transmit/unlock/write); the WPF
+  app replays/decodes captures. Keep its SPN table in sync with `signals.py`.
+  The C++ core has a self-test (`-DMCM_BUILD_TESTS=ON`); the WPF app is built
+  on Windows (.NET 8 + WPF).
 
 ## Commands
 

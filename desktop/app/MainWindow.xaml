@@ -1,0 +1,52 @@
+<Window x:Class="McmD5Viewer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MCM D5 Viewer (read-only)" Height="600" Width="900">
+    <DockPanel>
+        <ToolBar DockPanel.Dock="Top">
+            <Button x:Name="OpenButton" Content="Open Log..." Click="OnOpenLog" />
+            <Button x:Name="PlayButton" Content="Play" Click="OnPlayPause" />
+            <Button x:Name="StopButton" Content="Stop" Click="OnStop" />
+            <Separator />
+            <TextBlock VerticalAlignment="Center" Margin="8,0">Lamps:</TextBlock>
+            <TextBlock x:Name="LampMil" Text="MIL" Margin="4,0" />
+            <TextBlock x:Name="LampRed" Text="STOP" Margin="4,0" />
+            <TextBlock x:Name="LampAmber" Text="WARN" Margin="4,0" />
+        </ToolBar>
+
+        <StatusBar DockPanel.Dock="Bottom">
+            <StatusBarItem>
+                <TextBlock x:Name="StatusText" Text="Open a candump log to begin (read-only)." />
+            </StatusBarItem>
+        </StatusBar>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="320" />
+            </Grid.ColumnDefinitions>
+
+            <GroupBox Header="Live Data" Grid.Column="0">
+                <DataGrid x:Name="SignalsGrid" AutoGenerateColumns="False" IsReadOnly="True"
+                          CanUserAddRows="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Signal" Binding="{Binding Name}" Width="*" />
+                        <DataGridTextColumn Header="Value" Binding="{Binding Value, StringFormat=N3}" Width="100" />
+                        <DataGridTextColumn Header="Unit" Binding="{Binding Unit}" Width="70" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </GroupBox>
+
+            <GroupBox Header="Fault Codes (DM1/DM2)" Grid.Column="1">
+                <DataGrid x:Name="DtcGrid" AutoGenerateColumns="False" IsReadOnly="True"
+                          CanUserAddRows="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="SPN" Binding="{Binding Spn}" Width="*" />
+                        <DataGridTextColumn Header="FMI" Binding="{Binding Fmi}" Width="50" />
+                        <DataGridTextColumn Header="OC" Binding="{Binding OccurrenceCount}" Width="50" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </GroupBox>
+        </Grid>
+    </DockPanel>
+</Window>

@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <Platforms>x64</Platforms>
+    <AssemblyName>McmD5Viewer</AssemblyName>
+    <RootNamespace>McmD5Viewer</RootNamespace>
+  </PropertyGroup>
+
+  <!--
+    The native mcmcore.dll (built from ../core via CMake) must sit next to the
+    app binary at runtime. Build it, then copy mcmcore.dll into the output dir,
+    or add it as a <Content> item with CopyToOutputDirectory once built.
+  -->
+
+</Project>
