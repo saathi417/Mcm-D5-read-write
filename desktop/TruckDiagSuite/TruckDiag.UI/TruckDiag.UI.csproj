@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <AssemblyName>TruckDiag</AssemblyName>
+    <RootNamespace>TruckDiag.UI</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TruckDiag.Core\TruckDiag.Core.csproj" />
+    <ProjectReference Include="..\TruckDiag.Database\TruckDiag.Database.csproj" />
+  </ItemGroup>
+
+  <!-- Build NativeEngine.dll (desktop/TruckDiagSuite/NativeEngine via CMake)
+       and copy it next to TruckDiag.exe at runtime. -->
+
+</Project>
