@@ -8,7 +8,6 @@ cantools = pytest.importorskip("cantools")
 
 from mcm_d5.dbc import DbcDecoder  # noqa: E402
 
-
 _DBC = textwrap.dedent(
     """\
     VERSION ""

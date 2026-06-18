@@ -20,7 +20,7 @@ is restricted to the read services above.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import List, Optional, Protocol
+from typing import List, Protocol
 
 from mcm_d5.errors import McmD5Error
 
@@ -77,7 +77,7 @@ def _check_negative(response: bytes, expected_sid: int) -> None:
         )
 
 
-def parse_read_data_by_identifier(response: bytes) -> "DataByIdentifier":
+def parse_read_data_by_identifier(response: bytes) -> DataByIdentifier:
     """Parse a 0x62 positive response into its DID and data record."""
     _check_negative(response, SID_READ_DATA_BY_ID)
     if len(response) < 3:
@@ -86,7 +86,7 @@ def parse_read_data_by_identifier(response: bytes) -> "DataByIdentifier":
     return DataByIdentifier(did=did, data=bytes(response[3:]))
 
 
-def parse_read_dtc_by_status_mask(response: bytes) -> "DtcReport":
+def parse_read_dtc_by_status_mask(response: bytes) -> DtcReport:
     """Parse a 0x59 positive response (sub-function 0x02) into DTC records."""
     _check_negative(response, SID_READ_DTC_INFO)
     if len(response) < 3:

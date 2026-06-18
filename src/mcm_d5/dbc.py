@@ -21,7 +21,7 @@ class DbcDecoder:
         self._db = database
 
     @classmethod
-    def from_file(cls, path: str) -> "DbcDecoder":
+    def from_file(cls, path: str) -> DbcDecoder:
         try:
             import cantools  # type: ignore
         except ImportError as exc:  # pragma: no cover - optional dep

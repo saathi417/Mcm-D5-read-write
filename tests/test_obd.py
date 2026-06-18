@@ -2,6 +2,7 @@
 
 import pytest
 
+from mcm_d5.errors import McmD5Error
 from mcm_d5.obd import (
     ObdReadClient,
     build_pid_request,
@@ -41,7 +42,7 @@ def test_parse_stored_dtcs():
 
 
 def test_unsupported_pid_raises():
-    with pytest.raises(Exception):
+    with pytest.raises(McmD5Error):
         parse_pid_response(bytes([0x41, 0xAB, 0x00]))
 
 

@@ -37,7 +37,7 @@ class J1939Frame:
     destination: Optional[int]
 
     @classmethod
-    def from_can_id(cls, can_id: int, data: bytes) -> "J1939Frame":
+    def from_can_id(cls, can_id: int, data: bytes) -> J1939Frame:
         """Build a frame from a raw extended CAN id and payload."""
         cid = can_id & CAN_EXT_MASK
         source = cid & 0xFF

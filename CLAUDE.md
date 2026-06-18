@@ -37,13 +37,16 @@ src/mcm_d5/
   uds.py                # read-only UDS: 0x22 / 0x19 / 0x3E + UdsReadClient
   obd.py                # read-only OBD-II/J1979: Mode 0x01 PIDs + 0x03 DTCs
   dbc.py                # optional cantools-based DBC decoding (DbcDecoder)
+  tp.py                 # J1939 Transport Protocol reassembly (recv side)
+  logreader.py          # candump / SavvyCAN CSV / asc / blf capture readers
   link.py               # Link protocol (recv only); ReplayLink + PythonCanLink
   monitor.py            # J1939Monitor — pump frames, decode, dispatch callbacks
+  cli.py                # `mcm-d5` CLI: monitor (live) + decode-log (offline)
   errors.py             # McmD5Error, DecodeError, LinkError
 examples/
   live_monitor.py       # connect to an adapter and print live data + DTCs
-tests/
-  test_frame.py test_signals.py test_dm1.py test_monitor.py test_uds.py
+tests/                  # frame/signals/dm1/monitor/uds/obd/dbc/tp/logreader/...
+.github/workflows/ci.yml  # pytest + ruff + mypy on push/PR
 README.md  LICENSE
 ```
 
@@ -73,13 +76,17 @@ Uses the **`src/` layout** — the importable package lives in `src/mcm_d5`.
 ## Commands
 
 ```bash
-pip install -e ".[dev]"       # library + pytest
-pip install -e ".[dev,can]"   # also python-can for live capture
-pytest                        # run the suite (config in pyproject.toml)
-python examples/live_monitor.py --interface socketcan --channel can0
+pip install -e ".[dev]"          # library + pytest, ruff, mypy
+pip install -e ".[dev,can,dbc]"  # also python-can + cantools
+pytest                           # run the suite (config in pyproject.toml)
+ruff check src tests             # lint
+mypy                             # type-check (config in pyproject.toml)
+mcm-d5 monitor --interface socketcan --channel can0   # live read (needs [can])
+mcm-d5 decode-log capture.log                         # offline decode
 ```
 
-No linter/formatter or CI is configured yet. If you add one, document it here.
+CI (`.github/workflows/ci.yml`) runs ruff, mypy, and pytest on Python
+3.9–3.12 for every push and PR. Keep all three green.
 
 ## Development workflow
 

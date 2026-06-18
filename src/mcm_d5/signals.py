@@ -42,6 +42,10 @@ class Signal:
 
 # PGN -> signals. PGNs are given in decimal with the hex in a comment.
 PGN_SIGNALS: Dict[int, List[Signal]] = {
+    61443: [  # EEC2 — Electronic Engine Controller 2 (0xF003)
+        Signal(91, "Accelerator Pedal Position 1", 1, 1, 0.4, 0.0, "%"),
+        Signal(92, "Engine Percent Load At Current Speed", 2, 1, 1.0, 0.0, "%"),
+    ],
     61444: [  # EEC1 — Electronic Engine Controller 1 (0xF004)
         Signal(513, "Actual Engine - Percent Torque", 2, 1, 1.0, -125.0, "%"),
         Signal(190, "Engine Speed", 3, 2, 0.125, 0.0, "rpm"),
@@ -76,6 +80,19 @@ PGN_SIGNALS: Dict[int, List[Signal]] = {
     ],
     61455: [  # AT1OG1 — Aftertreatment 1 Outlet Gas 1 (0xF00F)
         Signal(3226, "Aftertreatment 1 Outlet NOx", 0, 2, 0.05, -200.0, "ppm"),
+    ],
+    65269: [  # AMB — Ambient Conditions (0xFEF5)
+        Signal(108, "Barometric Pressure", 0, 1, 0.5, 0.0, "kPa"),
+        Signal(171, "Ambient Air Temperature", 3, 2, 0.03125, -273.0, "degC"),
+    ],
+    65253: [  # HOURS — Engine Hours, Revolutions (0xFEE5)
+        Signal(247, "Engine Total Hours of Operation", 0, 4, 0.05, 0.0, "h"),
+    ],
+    65257: [  # LFC — Fuel Consumption (Liquid) (0xFEE9)
+        Signal(250, "Engine Total Fuel Used", 4, 4, 0.5, 0.0, "L"),
+    ],
+    65217: [  # VDHR — High Resolution Vehicle Distance (0xFEC1)
+        Signal(917, "Total Vehicle Distance (High Resolution)", 0, 4, 0.005, 0.0, "km"),
     ],
 }
 

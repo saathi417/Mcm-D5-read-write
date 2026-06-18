@@ -14,7 +14,8 @@ Implementations:
 
 from __future__ import annotations
 
-from typing import Iterable, Iterator, List, Optional, Protocol, runtime_checkable
+from collections.abc import Iterable, Iterator
+from typing import Optional, Protocol, runtime_checkable
 
 from mcm_d5.frame import J1939Frame
 
@@ -55,7 +56,7 @@ class PythonCanLink:
         self._bus = bus
 
     @classmethod
-    def open(cls, channel: str, interface: str = "socketcan", **kwargs) -> "PythonCanLink":
+    def open(cls, channel: str, interface: str = "socketcan", **kwargs) -> PythonCanLink:
         try:
             import can  # type: ignore
         except ImportError as exc:  # pragma: no cover - depends on optional dep
