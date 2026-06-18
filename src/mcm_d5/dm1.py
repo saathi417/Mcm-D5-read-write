@@ -18,6 +18,13 @@ from mcm_d5.errors import DecodeError
 
 DM1_PGN = 65226  # 0xFECA — active DTCs
 DM2_PGN = 65227  # 0xFECB — previously active DTCs
+DM6_PGN = 65231  # 0xFECF — pending DTCs
+DM27_PGN = 64898  # 0xFD82 — all pending DTCs
+DM28_PGN = 64896  # 0xFD80 — permanent DTCs
+DM5_PGN = 65230  # 0xFECE — diagnostic readiness 1
+
+# DM messages that share the lamp + 4-byte-DTC layout parsed by parse_diagnostic.
+DTC_DIAGNOSTIC_PGNS = frozenset({DM1_PGN, DM2_PGN, DM6_PGN, DM27_PGN, DM28_PGN})
 
 
 @dataclass(frozen=True)
@@ -70,3 +77,23 @@ def parse_diagnostic(payload: bytes) -> DiagnosticMessage:
         dtcs.append(Dtc(spn=spn, fmi=fmi, occurrence_count=occurrence))
 
     return DiagnosticMessage(dtcs=dtcs, **msg_lamps)
+
+
+@dataclass(frozen=True)
+class DiagnosticReadiness:
+    """Decoded DM5 (Diagnostic Readiness 1) summary."""
+
+    active_trouble_codes: int
+    previously_active_trouble_codes: int
+    obd_compliance: int
+
+
+def parse_readiness(payload: bytes) -> DiagnosticReadiness:
+    """Parse a DM5 (PGN 65230) payload."""
+    if len(payload) < 3:
+        raise DecodeError("DM5 payload must be at least 3 bytes")
+    return DiagnosticReadiness(
+        active_trouble_codes=payload[0],
+        previously_active_trouble_codes=payload[1],
+        obd_compliance=payload[2],
+    )

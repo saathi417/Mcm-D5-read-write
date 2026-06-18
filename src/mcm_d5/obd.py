@@ -12,7 +12,7 @@ sends/receives over a caller-supplied transceiver.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Callable, Dict, List, Optional, Protocol, Tuple
+from typing import Callable, Dict, List, Protocol, Tuple
 
 from mcm_d5.errors import McmD5Error
 

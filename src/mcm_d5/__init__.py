@@ -6,17 +6,25 @@ ReadDTCInformation, TesterPresent). The package has no ability to perform
 security access, clear codes, reset a derate, or write/flash a module.
 """
 
+from mcm_d5.dbc import DbcDecoder
 from mcm_d5.dm1 import (
     DM1_PGN,
     DM2_PGN,
+    DM5_PGN,
+    DM6_PGN,
+    DM27_PGN,
+    DM28_PGN,
+    DTC_DIAGNOSTIC_PGNS,
     DiagnosticMessage,
+    DiagnosticReadiness,
     Dtc,
     parse_diagnostic,
+    parse_readiness,
 )
-from mcm_d5.dbc import DbcDecoder
 from mcm_d5.errors import DecodeError, LinkError, McmD5Error
 from mcm_d5.frame import J1939Frame
 from mcm_d5.link import Link, PythonCanLink, ReplayLink
+from mcm_d5.logreader import open_log, read_candump, read_savvycan_csv
 from mcm_d5.monitor import J1939Monitor
 from mcm_d5.obd import (
     ObdReadClient,
@@ -28,6 +36,7 @@ from mcm_d5.obd import (
     parse_stored_dtcs,
 )
 from mcm_d5.signals import PGN_SIGNALS, Signal, decode_pgn
+from mcm_d5.tp import TransportProtocolReassembler
 from mcm_d5.uds import (
     DataByIdentifier,
     DtcReport,
@@ -53,9 +62,20 @@ __all__ = [
     "decode_pgn",
     "DM1_PGN",
     "DM2_PGN",
+    "DM5_PGN",
+    "DM6_PGN",
+    "DM27_PGN",
+    "DM28_PGN",
+    "DTC_DIAGNOSTIC_PGNS",
     "Dtc",
     "DiagnosticMessage",
+    "DiagnosticReadiness",
     "parse_diagnostic",
+    "parse_readiness",
+    "TransportProtocolReassembler",
+    "open_log",
+    "read_candump",
+    "read_savvycan_csv",
     "UdsReadClient",
     "DataByIdentifier",
     "DtcReport",

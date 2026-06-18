@@ -14,14 +14,18 @@ pip install -e ".[dev,can]"          # + python-can for live capture
 pip install -e ".[dev,can,dbc]"      # + cantools for DBC decoding
 ```
 
-## Live monitor (connect for read)
+## CLI
 
 ```bash
-python examples/live_monitor.py --interface socketcan --channel can0 --bitrate 250000
+mcm-d5 monitor --interface socketcan --channel can0 --bitrate 250000  # live read
+mcm-d5 decode-log capture.log                                          # offline
 ```
 
-Any `python-can` interface works (SocketCAN, and RP1210/J2534 bridges for a
-NEXIQ-style adapter). Decoding is the same regardless of adapter.
+`decode-log` autodetects `candump` logs, SavvyCAN CSV, and (with the `[can]`
+extra) Vector `.asc`/`.blf`. Any `python-can` interface works for live capture
+(SocketCAN, and RP1210/J2534 bridges for a NEXIQ-style adapter); decoding is the
+same regardless of adapter. Multi-packet messages (multi-DTC DM1, VIN) are
+reassembled via J1939 Transport Protocol automatically.
 
 ## Library usage
 
