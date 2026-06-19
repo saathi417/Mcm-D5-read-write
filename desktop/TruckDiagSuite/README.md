@@ -10,8 +10,10 @@ any of those.
 TruckDiagSuite/
   TruckDiagSuite.sln
   TruckDiag.Core/        C# business logic — NativeEngine P/Invoke,
-                         DiagnosticSession orchestration, models, IEcuPlugin
-  TruckDiag.Database/    C# SQLite — Vehicles/Modules/FaultCodes/Definitions/Logs
+                         DiagnosticSession, models, IEcuPlugin, PluginLoader, Fmi
+  TruckDiag.Database/    C# SQLite — repository + DefinitionSeeder
+                         (Vehicles/Modules/FaultCodes/Definitions/Logs)
+  TruckDiag.Plugins.Detroit/  managed read-only plugin (loaded by PluginLoader)
   TruckDiag.UI/          C# WPF — Dashboard, Vehicle Discovery, Fault Codes,
                          Live Data, Logs, Settings (no Programming tab)
   NativeEngine/          C++ DLL — ITransport (receive + Request-PGN only),

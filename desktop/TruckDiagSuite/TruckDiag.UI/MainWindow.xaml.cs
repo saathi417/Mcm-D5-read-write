@@ -18,6 +18,7 @@ public partial class MainWindow : Window
     private readonly Dictionary<int, int> _liveIndexBySpn = new();
 
     private DiagnosticSession? _session;
+    private readonly IReadOnlyList<IEcuPlugin> _plugins;
 
     public MainWindow()
     {
@@ -25,6 +26,25 @@ public partial class MainWindow : Window
         ModulesGrid.ItemsSource = _modules;
         FaultsGrid.ItemsSource = _faults;
         LiveGrid.ItemsSource = _live;
+
+        // Load read-only OEM plugins shipped next to the app.
+        string pluginDir = Path.Combine(AppContext.BaseDirectory, "plugins");
+        _plugins = PluginLoader.LoadFrom(pluginDir);
+    }
+
+    /// <summary>OEM-specific fault text from the first plugin that has it.</summary>
+    private string? ResolveDtcText(int spn, int fmi)
+    {
+        foreach (IEcuPlugin plugin in _plugins)
+        {
+            string? text = plugin.DtcText(spn, fmi);
+            if (!string.IsNullOrEmpty(text))
+            {
+                return text;
+            }
+        }
+
+        return Fmi.Text(fmi);
     }
 
     private void OnOpenCapture(object sender, RoutedEventArgs e)
@@ -73,7 +93,7 @@ public partial class MainWindow : Window
         }
 
         _session.RequestPgn(65226); // DM1
-        int n = _session.Pump();
+        int n = _session.Pump(ResolveDtcText);
         StatusText.Text = $"Read {_faults.Count} fault codes from {n} frames.";
         AppendLog("Read Faults (read-only request).");
     }
