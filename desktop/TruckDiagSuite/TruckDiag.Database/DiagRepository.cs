@@ -62,6 +62,18 @@ public sealed class DiagRepository : IDisposable
         return cmd.ExecuteScalar() as string;
     }
 
+    public void UpsertDefinition(int spn, int fmi, string description)
+    {
+        using SqliteCommand cmd = _conn.CreateCommand();
+        cmd.CommandText =
+            "INSERT INTO Definitions (Spn, Fmi, Description) VALUES ($spn, $fmi, $desc) " +
+            "ON CONFLICT(Spn, Fmi) DO UPDATE SET Description=$desc;";
+        cmd.Parameters.AddWithValue("$spn", spn);
+        cmd.Parameters.AddWithValue("$fmi", fmi);
+        cmd.Parameters.AddWithValue("$desc", description);
+        cmd.ExecuteNonQuery();
+    }
+
     public void Log(string source, string message)
     {
         using SqliteCommand cmd = _conn.CreateCommand();
