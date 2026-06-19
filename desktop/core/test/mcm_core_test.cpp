@@ -3,6 +3,7 @@
 
 #include <cmath>
 #include <cstdio>
+#include <cstring>
 
 static int failures = 0;
 
@@ -45,6 +46,10 @@ int main() {
     uint32_t req_id = mcm_build_request_pgn(65226, 0xFF, 0xF9, 6, req);
     check(req_id == 0x18EAFFF9u, "request pgn can id");
     check(req[0] == 0xCA && req[1] == 0xFE && req[2] == 0x00, "request pgn data");
+
+    // FMI text: known and unknown.
+    check(std::strcmp(mcm_fmi_text(4), "Voltage below normal or shorted low") == 0, "fmi 4 text");
+    check(std::strcmp(mcm_fmi_text(99), "Unknown FMI") == 0, "fmi unknown text");
 
     if (failures == 0) {
         std::printf("all core tests passed\n");
