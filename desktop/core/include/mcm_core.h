@@ -69,6 +69,10 @@ MCM_API uint32_t mcm_build_request_pgn(int32_t requested_pgn, uint8_t dest,
                                        uint8_t src, uint8_t priority,
                                        uint8_t* out_data /* >= 3 bytes */);
 
+/* Standard SAE J1939-73 Failure Mode Identifier (FMI) text for 0..31.
+ * Returns a static string (never NULL); unknown values yield "Unknown FMI". */
+MCM_API const char* mcm_fmi_text(int32_t fmi);
+
 #ifdef __cplusplus
 }
 #endif

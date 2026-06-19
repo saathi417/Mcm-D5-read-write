@@ -49,7 +49,7 @@ tests/                  # frame/signals/dm1/monitor/uds/obd/dbc/tp/logreader/...
 desktop/                # separate read-only WPF + C++ desktop projects
   core/                 # C++ native decode lib (mcmcore), C ABI, self-test
   app/                  # C# WPF viewer (McmD5Viewer, P/Invokes mcmcore)
-  plugins/detroit/      # read-only OEM IEcuPlugin example
+  plugins/{detroit,cummins,paccar}/  # read-only OEM IEcuPlugin examples
   TruckDiagSuite/       # layered read-only suite: NativeEngine (C++) +
                         # TruckDiag.Core/.Database/.UI (C#); 6 read tabs,
                         # no Programming/clear/unlock/flash

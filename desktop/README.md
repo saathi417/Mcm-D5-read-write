@@ -24,7 +24,13 @@ This mirrors the Python library in `../src/mcm_d5`; keep the SPN tables in
 desktop/
   core/include/iecu_plugin.h   read-only OEM plugin contract
   plugins/detroit/             DetroitPlugin (read-only identify + decode)
+  plugins/cummins/             CumminsPlugin (read-only)
+  plugins/paccar/              PaccarPlugin  (read-only)
 ```
+
+The core also exposes `mcm_fmi_text()` — standard SAE J1939-73 Failure Mode
+Identifier descriptions — so fault codes show human-readable failure modes.
+Plugins add OEM-specific SPN text on top via `DtcText()`.
 
 ## Scope (read-only)
 

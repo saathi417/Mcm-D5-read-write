@@ -143,6 +143,35 @@ uint32_t mcm_build_request_pgn(int32_t requested_pgn, uint8_t dest, uint8_t src,
     return (prio << 26) | (0xEAu << 16) | (static_cast<uint32_t>(dest) << 8) | src;
 }
 
+const char* mcm_fmi_text(int32_t fmi) {
+    switch (fmi) {
+        case 0:  return "Data valid but above normal operational range (most severe)";
+        case 1:  return "Data valid but below normal operational range (most severe)";
+        case 2:  return "Data erratic, intermittent or incorrect";
+        case 3:  return "Voltage above normal or shorted high";
+        case 4:  return "Voltage below normal or shorted low";
+        case 5:  return "Current below normal or open circuit";
+        case 6:  return "Current above normal or grounded circuit";
+        case 7:  return "Mechanical system not responding properly";
+        case 8:  return "Abnormal frequency, pulse width or period";
+        case 9:  return "Abnormal update rate";
+        case 10: return "Abnormal rate of change";
+        case 11: return "Root cause not known";
+        case 12: return "Bad intelligent device or component";
+        case 13: return "Out of calibration";
+        case 14: return "Special instructions";
+        case 15: return "Data valid but above normal operating range (least severe)";
+        case 16: return "Data valid but above normal operating range (moderately severe)";
+        case 17: return "Data valid but below normal operating range (least severe)";
+        case 18: return "Data valid but below normal operating range (moderately severe)";
+        case 19: return "Received network data in error";
+        case 20: return "Data drifted high";
+        case 21: return "Data drifted low";
+        case 31: return "Condition exists";
+        default: return "Unknown FMI";
+    }
+}
+
 int32_t mcm_parse_dm1(const uint8_t* data, int32_t len, McmLamps* lamps,
                       McmDtc* out, int32_t max) {
     if (data == nullptr || lamps == nullptr || out == nullptr || len < 2) {
